@@ -12,12 +12,12 @@ abstract class Client
     /**
      * @var string|null
      */
-    protected $host;
+    protected ?string $host;
 
     /**
      * @var Response|null
      */
-    protected Response $response;
+    protected ?Response $response;
 
     /**
      * @var array|string|null
