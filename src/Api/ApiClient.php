@@ -18,9 +18,9 @@ abstract class ApiClient extends Client
 
     /**
      * response
-     * @var Response
+     * @var Response|null
      */
-    protected Response $response;
+    protected ?Response $response;
 
     /**
      * @var string
