@@ -23,9 +23,9 @@ abstract class ApiClient extends Client
     protected ?Response $response;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $type;
+    protected ?string $type;
 
     /**
      * ApiClient constructor.
@@ -36,7 +36,8 @@ abstract class ApiClient extends Client
             $host = config('api_server.host');
         }
         parent::__construct($host);
-        $this->type = config('api_server.token_storage.' . $type);
+
+        $this->type = $type;
         $this->config = ConfigParser::newInstance(config('api_server'));
     }
 
