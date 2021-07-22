@@ -5,6 +5,7 @@ namespace Miniyus\RestfulApiClient\Api\EndPoint;
 
 use Miniyus\RestfulApiClient\Api\Api;
 use Miniyus\RestfulApiClient\Api\Client;
+use Miniyus\RestfulApiClient\Api\ConfigParser;
 use Miniyus\RestfulApiClient\Api\Contracts\EndPoint;
 
 /**
@@ -21,7 +22,17 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      */
     public function __construct(string $host = null)
     {
-        parent::__construct(config('api_server.host', $host));
+        parent::__construct($host);
+    }
+
+    /**
+     * @param ConfigParser $config
+     * @return $this
+     */
+    public function setConfig(ConfigParser $config): AbstractEndPoint
+    {
+        $this->config = $config;
+        return $this;
     }
 
     /**
@@ -46,7 +57,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      */
     protected function makeClient(string $name, string $host = null): AbstractSubClient
     {
-        $class = config('api_server.module_namespace') . "\\" . ucfirst($this->endPoint()) . "\\Resource\\" . ucfirst($name);
+        $class = $this->config('module_namespace') . "\\" . ucfirst($this->endPoint()) . "\\Resource\\" . ucfirst($name);
 
         /** @var AbstractSubClient $client */
         $client = new $class($host);

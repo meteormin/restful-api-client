@@ -43,7 +43,7 @@ abstract class AbstractSubClient extends Client implements SubClient
      */
     public function __construct(string $host = null)
     {
-        parent::__construct(config('api_server.host', $host));
+        parent::__construct($host);
     }
 
     /**
