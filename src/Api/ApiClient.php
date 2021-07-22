@@ -30,9 +30,12 @@ abstract class ApiClient extends Client
     /**
      * ApiClient constructor.
      */
-    public function __construct(string $type = null)
+    public function __construct(string $host = null, string $type = null)
     {
-        parent::__construct(config('api_server.host'));
+        if (is_null($host)) {
+            $host = config('api_server.host');
+        }
+        parent::__construct($host);
         $this->type = config('api_server.token_storage.' . $type);
         $this->config = ConfigParser::newInstance(config('api_server'));
     }
