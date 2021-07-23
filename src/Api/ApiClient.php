@@ -80,7 +80,7 @@ abstract class ApiClient extends Client
     public function makeEndPoint(string $class): ?EndPoint
     {
         if (class_exists($class)) {
-            $object = new $class;
+            $object = new $class($this->host);
             if ($object instanceof EndPoint) {
                 return $object->setConfig($this->config);
             }

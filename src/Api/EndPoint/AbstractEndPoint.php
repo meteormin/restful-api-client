@@ -20,9 +20,13 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      * AbstractEndPoint constructor.
      * @param string|null $host
      */
-    public function __construct(string $host = null)
+    public function __construct(string $host = null, string $server = 'default')
     {
         parent::__construct($host);
+
+        if (!is_null($host)) {
+            $this->setHost($host);
+        }
     }
 
     /**
