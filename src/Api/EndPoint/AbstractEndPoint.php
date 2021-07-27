@@ -3,6 +3,7 @@
 
 namespace Miniyus\RestfulApiClient\Api\EndPoint;
 
+use Illuminate\Support\Str;
 use Miniyus\RestfulApiClient\Api\Api;
 use Miniyus\RestfulApiClient\Api\Client;
 use Miniyus\RestfulApiClient\Api\ConfigParser;
@@ -61,7 +62,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      */
     protected function makeClient(string $name, string $host = null): AbstractSubClient
     {
-        $class = $this->config('module_namespace') . "\\" . ucfirst($this->endPoint()) . "\\Resource\\" . ucfirst($name);
+        $class = $this->config('module_namespace') . "\\" . Str::camel($this->endPoint()) . "\\Resource\\" . Str::camel($name);
 
         /** @var AbstractSubClient $client */
         $client = new $class($host);
