@@ -52,7 +52,6 @@ abstract class ApiClient extends Client
      */
     public static function __callStatic($name, $arguments)
     {
-        /** @var ApiClient $static */
         $static = static::newInstance();
 
         return $static->$name($arguments);
