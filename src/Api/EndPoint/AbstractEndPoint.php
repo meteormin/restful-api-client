@@ -62,7 +62,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      */
     protected function makeClient(string $name, string $host = null): AbstractSubClient
     {
-        $class = $this->config('module_namespace') . "\\" . Str::camel($this->endPoint()) . "\\Resource\\" . Str::camel($name);
+        $class = $this->config('module_namespace') . "\\" . Str::studly($this->endPoint()) . "\\Resource\\" . Str::studly($name);
 
         /** @var AbstractSubClient $client */
         $client = new $class($host);

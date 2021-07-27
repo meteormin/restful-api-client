@@ -93,7 +93,7 @@ abstract class ApiClient extends Client
         $classPath = null;
         foreach (array_keys($apis) as $key) {
             if ($name == $key) {
-                $className = Str::camel($key);
+                $className = Str::studly($key);
                 $classPath = config('api_server.' . $this->server . '.module_namespace') . "\\{$className}\\" . $className;
             }
         }
