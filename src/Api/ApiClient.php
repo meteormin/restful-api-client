@@ -74,6 +74,17 @@ abstract class ApiClient extends Client
     }
 
     /**
+     * @param string|null $host
+     * @param string|null $type
+     * @param string $server
+     * @return Client
+     */
+    public static function newInstance(string $host = null, string $type = null, string $server = 'default'): Client
+    {
+        return new static($host, $type, $server);
+    }
+
+    /**
      * @param string $name
      * @return string|null
      */
