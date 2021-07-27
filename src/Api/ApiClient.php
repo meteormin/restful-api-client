@@ -69,7 +69,7 @@ abstract class ApiClient extends Client
         if (is_null($classPath)) {
             return null;
         }
-        return $this->makeEndPoint($$classPath);
+        return $this->makeEndPoint($classPath);
     }
 
     /**
