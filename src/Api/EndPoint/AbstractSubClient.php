@@ -3,6 +3,7 @@
 
 namespace Miniyus\RestfulApiClient\Api\EndPoint;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Miniyus\RestfulApiClient\Api\Api;
 use Miniyus\RestfulApiClient\Api\Client;
 use Miniyus\RestfulApiClient\Api\ConfigParser;
@@ -89,6 +90,7 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * @param array|string|null $input
      * @return array|string|null
+     * @throws FileNotFoundException
      */
     public function get($input = null)
     {
@@ -100,6 +102,7 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * @param array $input
      * @return array|string|null
+     * @throws FileNotFoundException
      */
     public function post(array $input = [])
     {
@@ -112,6 +115,7 @@ abstract class AbstractSubClient extends Client implements SubClient
      * @param array|string|int $input
      * @param array $data
      * @return array|string|null
+     * @throws FileNotFoundException
      */
     public function put($input = [], array $data = [])
     {
@@ -125,6 +129,7 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * @param string|int|array $input
      * @return array|string|null
+     * @throws FileNotFoundException
      */
     public function delete($input)
     {
@@ -139,6 +144,7 @@ abstract class AbstractSubClient extends Client implements SubClient
      * show resource, id parameter is path parameter
      * @param string|int $id
      * @return null
+     * @throws FileNotFoundException
      */
     public function show($id, array $params = null)
     {

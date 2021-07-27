@@ -7,6 +7,7 @@ namespace Miniyus\RestfulApiClient\Api;
 use Miniyus\RestfulApiClient\Api\Contracts\EndPoint;
 use Miniyus\RestfulApiClient\Response\ErrorResponse;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Str;
 
 /**
  * Class ApiClient
@@ -53,16 +54,40 @@ abstract class ApiClient extends Client
     {
         /** @var ApiClient $static */
         $static = static::newInstance();
-        $apis = $static->config('end_point');
+
+        return $static->$name($arguments);
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     * @return EndPoint|null
+     */
+    public function __call($name, $arguments)
+    {
+        $classPath = $this->getEndPointClass($name);
+        if (is_null($classPath)) {
+            return null;
+        }
+        return $this->makeEndPoint($$classPath);
+    }
+
+    /**
+     * @param string $name
+     * @return string|null
+     */
+    protected function getEndPointClass(string $name): ?string
+    {
+        $apis = $this->config('end_point');
+        $classPath = null;
         foreach (array_keys($apis) as $key) {
             if ($name == $key) {
-                $className = ucfirst($key);
-                $classPath = config('api_server.' . $static->server . '.module_namespace') . "\\{$className}\\" . $className;
-                return $static->makeEndPoint($classPath);
+                $className = Str::camel($key);
+                $classPath = config('api_server.' . $this->server . '.module_namespace') . "\\{$className}\\" . $className;
             }
         }
 
-        return null;
+        return $classPath;
     }
 
     /**
@@ -77,7 +102,7 @@ abstract class ApiClient extends Client
      * @param string $class
      * @return EndPoint|null
      */
-    public function makeEndPoint(string $class): ?EndPoint
+    protected function makeEndPoint(string $class): ?EndPoint
     {
         if (class_exists($class)) {
             $object = new $class($this->host);
