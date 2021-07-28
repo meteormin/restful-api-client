@@ -28,16 +28,20 @@ abstract class ApiClient extends Client
      */
     protected ?string $type;
 
+    /**
+     * @var string|null
+     */
     protected ?string $server;
 
     /**
      * ApiClient constructor.
      */
-    public function __construct(string $host = null, string $type = null, string $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
     {
         if (is_null($host)) {
             $host = config('api_server.' . $server . '.host');
         }
+
         parent::__construct($host);
 
         $this->type = $type;
@@ -74,13 +78,11 @@ abstract class ApiClient extends Client
 
     /**
      * @param string|null $host
-     * @param string|null $type
-     * @param string $server
      * @return static
      */
-    public static function newInstance(string $host = null, string $type = null, string $server = 'default'): ApiClient
+    public static function newInstance(string $host = null): ApiClient
     {
-        return new static($host, $type, $server);
+        return new static($host);
     }
 
     /**
@@ -116,9 +118,9 @@ abstract class ApiClient extends Client
     protected function makeEndPoint(string $class): ?EndPoint
     {
         if (class_exists($class)) {
-            $object = new $class($this->host);
+            $object = new $class($this->host, $this->type, $this->server);
             if ($object instanceof EndPoint) {
-                return $object->setConfig($this->config);
+                return $object;
             }
         }
 

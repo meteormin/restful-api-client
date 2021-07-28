@@ -18,26 +18,30 @@ abstract class AbstractEndPoint extends Client implements EndPoint
     use Api;
 
     /**
+     * @var string|null
+     */
+    protected ?string $type;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $server;
+
+    /**
      * AbstractEndPoint constructor.
      * @param string|null $host
      */
-    public function __construct(string $host = null, string $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
     {
+        if (is_null($host)) {
+            $host = config("api_server.$server");
+        }
+
         parent::__construct($host);
 
-        if (!is_null($host)) {
-            $this->setHost($host);
-        }
-    }
-
-    /**
-     * @param ConfigParser $config
-     * @return $this
-     */
-    public function setConfig(ConfigParser $config): AbstractEndPoint
-    {
-        $this->config = $config;
-        return $this;
+        $this->type = $type;
+        $this->server = $server;
+        $this->config = ConfigParser::newInstance(config('api_server.' . $server));
     }
 
     /**
@@ -47,7 +51,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
      */
     public function __call($name, $arguments)
     {
-        return $this->makeClient($name, $arguments[0] ?? null);
+        return $this->makeClient($name);
     }
 
     /**
@@ -57,21 +61,19 @@ abstract class AbstractEndPoint extends Client implements EndPoint
 
     /**
      * @param string $name
-     * @param string|null $host
      * @return AbstractSubClient
      */
-    protected function makeClient(string $name, string $host = null): AbstractSubClient
+    protected function makeClient(string $name): AbstractSubClient
     {
         $class = $this->config('module_namespace') . "\\" . Str::studly($this->endPoint()) . "\\Resource\\" . Str::studly($name);
 
         /** @var AbstractSubClient $client */
-        $client = new $class($host);
+        $client = new $class($this->host, $this->type, $this->server);
 
         $namespace = $client->getNameSpace();
         $namePath = empty($namespace) ? $name : $namespace . '/' . $name;
-        $url = $this->makeUrl($this->getHost(), $namePath);
+        $url = $this->makeUrl($this->host, $namePath);
         $client->url = $url;
-        $client->setEndPoint($this->endPoint());
 
         return $client;
     }

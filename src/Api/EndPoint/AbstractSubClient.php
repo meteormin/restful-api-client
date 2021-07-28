@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 
 /**
  * Class AbstractSubClient
- * Basic HTTp Restful API methods
+ * Basic HTTP Restful API methods
  * GET
  * POST
  * PUT
@@ -26,25 +26,38 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * @var string
      */
-    public $url = '';
+    public string $url = '';
 
     /**
      * @var string
      */
-    protected $namespace = '';
+    protected string $namespace = '';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $endPoint = '';
+    protected ?string $type;
 
     /**
-     * AbstractSubClient constructor.
+     * @var string|null
+     */
+    protected ?string $server;
+
+    /**
+     * AbstractEndPoint constructor.
      * @param string|null $host
      */
-    public function __construct(string $host = null)
+    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
     {
+        if (is_null($host)) {
+            $host = config("api_server.$server");
+        }
+
         parent::__construct($host);
+
+        $this->type = $type;
+        $this->server = $server;
+        $this->config = ConfigParser::newInstance(config('api_server.' . $server));
     }
 
     /**
@@ -53,22 +66,6 @@ abstract class AbstractSubClient extends Client implements SubClient
     public function getNameSpace(): string
     {
         return $this->namespace;
-    }
-
-    /**
-     * @param string $endPoint
-     */
-    public function setEndPoint(string $endPoint)
-    {
-        $this->endPoint = $endPoint;
-    }
-
-    /**
-     * @return string
-     */
-    public function endPoint(): string
-    {
-        return $this->endPoint;
     }
 
     /**
