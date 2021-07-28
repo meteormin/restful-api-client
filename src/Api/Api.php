@@ -49,21 +49,24 @@ trait Api
     {
         switch ($type) {
             case 'storage':
-                Storage::disk('local')->put(config('api_server.token_storage.storage'), $token);
+                Storage::disk('local')->put(config("api_server.$this->server.token_storage.$type.name"), $token);
                 break;
             case 'session':
-                session()->put(config('api_server.token_storage.session'), $token);
+                session()->put(config("api_server.$this->server.token_storage.$type.name"), $token);
                 break;
             case 'model':
-                $class = config('api_server.token_storage.model');
+                $class = config("api_server.$this->server.token_storage.$type.name");
                 $model = new $class;
                 $model->setAttribute('access_token', $token);
                 $model->save();
                 break;
             case 'cookie':
-                cookie(config('api_server.token_storage.session'), $token);
+                cookie(config("api_server.$this->server.token_storage.$type.name"), $token);
                 break;
             default:
+                if (!is_null($this->type)) {
+                    $this->setToken($token, $this->type);
+                }
                 break;
         }
 
@@ -93,6 +96,9 @@ trait Api
                 $token = Cookie::get(config('api_server.token_storage.session'));
                 break;
             default:
+                if (!is_null($this->type)) {
+                    $this->getToken($this->type);
+                }
                 break;
         }
 
