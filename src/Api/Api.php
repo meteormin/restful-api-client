@@ -82,18 +82,18 @@ trait Api
         $token = null;
         switch ($type) {
             case 'storage':
-                $token = Storage::disk('local')->get(config('api_server.token_storage.storage'));
+                $token = Storage::disk('local')->get(config("api_server.$this->server.token_storage.$type.name"));
                 break;
             case 'session':
-                session()->get(config('api_server.token_storage.session'));
+                session()->get(config("api_server.$this->server.token_storage.$type.name"));
                 break;
             case 'model':
-                $class = config('api_server.token_storage.model');
+                $class = config("api_server.$this->server.token_storage.$type.name");
                 $model = new $class;
                 $token = $model->orderByDesc('created_at')->first();
                 break;
             case 'cookie':
-                $token = Cookie::get(config('api_server.token_storage.session'));
+                $token = Cookie::get(config("api_server.$this->server.token_storage.$type.name"));
                 break;
             default:
                 if (!is_null($this->type)) {
