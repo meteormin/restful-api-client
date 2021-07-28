@@ -1,3 +1,3 @@
 # RestfulApiClient
 
-v1.0.8
+v1.0.12
