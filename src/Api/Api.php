@@ -97,7 +97,7 @@ trait Api
                 break;
             default:
                 if (!is_null($this->type)) {
-                    $this->getToken($this->type);
+                    $token = $this->getToken($this->type);
                 }
                 break;
         }
