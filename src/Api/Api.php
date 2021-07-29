@@ -52,7 +52,7 @@ trait Api
                 Storage::disk('local')->put(config("api_server.$this->server.token_storage.$type.name"), $token);
                 break;
             case 'session':
-                session()->put(config("api_server.$this->server.token_storage.$type.name"), $token);
+                session([config("api_server.$this->server.token_storage.$type.name") => $token]);
                 break;
             case 'model':
                 $class = config("api_server.$this->server.token_storage.$type.name");
