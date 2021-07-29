@@ -74,6 +74,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
         $namePath = empty($namespace) ? $name : $namespace . '/' . $name;
         $url = $this->makeUrl($this->host, $namePath);
         $client->url = $url;
+        $client->setEndPoint($this->endPoint());
 
         return $client;
     }

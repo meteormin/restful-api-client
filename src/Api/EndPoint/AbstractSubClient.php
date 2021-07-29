@@ -34,6 +34,11 @@ abstract class AbstractSubClient extends Client implements SubClient
     protected string $namespace = '';
 
     /**
+     * @var string
+     */
+    protected string $endPoint = '';
+
+    /**
      * @var string|null
      */
     protected ?string $type;
@@ -58,6 +63,22 @@ abstract class AbstractSubClient extends Client implements SubClient
         $this->type = $type;
         $this->server = $server;
         $this->config = ConfigParser::newInstance(config('api_server.' . $server));
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndPoint(): string
+    {
+        return $this->endPoint;
+    }
+
+    /**
+     * @param string $endPoint
+     */
+    public function setEndPoint(string $endPoint): void
+    {
+        $this->endPoint = $endPoint;
     }
 
     /**
