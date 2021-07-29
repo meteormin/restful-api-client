@@ -68,7 +68,7 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * @return string
      */
-    public function getEndPoint(): string
+    public function endPoint(): string
     {
         return $this->endPoint;
     }
