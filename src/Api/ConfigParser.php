@@ -17,7 +17,7 @@ class ConfigParser
     /**
      * @var array|null
      */
-    protected $config;
+    protected ?array $config;
 
     /**
      * ConfigParser constructor.
