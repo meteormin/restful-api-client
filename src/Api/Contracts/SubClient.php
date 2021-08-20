@@ -27,5 +27,5 @@ interface SubClient
      * @param string|int|array $input
      * @return array|string|null
      */
-    public function delete($input);
+    public function delete($input = []);
 }

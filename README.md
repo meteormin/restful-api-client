@@ -1,6 +1,6 @@
 # RestfulApiClient For Laravel
 
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.5-blue.svg?cacheSeconds=2592000" />
   <a href="https://php.net" target="_blank">
     <img src="https://img.shields.io/badge/php-%5E7.4.0-blue" />
   </a>
@@ -14,7 +14,37 @@
     <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow" />
   </a>
 
-laravel용 restful API SDK개발 도구입니다. restful API의 url구조를 클래스로 구현하기 쉽게 Abstract 클래스들을 제공합니다.
+laravel용 restful API개발 도구입니다. restful API의 url구조를 클래스로 구현하기 쉽게 Abstract 클래스들을 제공합니다.
+
+## Preview
+
+```php
+<?php
+// GET https://api.exmaple.com/v1/user
+$response = ApiClient::v1()->user()->get();
+
+// POST https://api.example.com/v1/user
+$request = ['something'=>''];
+$response = ApiCLient::v1()->user()->post($request);
+
+// PUT https://api.example.com/v1/user
+$request = ['something'=>''];
+$response = ApiCLient::v1()->user()->put($request);
+
+// if you have path parameter
+// PUT https://api.example.com/v1/user/1 
+$id = 1;
+$request = ['something'=>''];
+$response = ApiCLient::v1()->user()->put($id, $request);
+
+// DELETE https://api.example.com/v1/user
+$response = ApiCLient::v1()->user()->delete();
+
+// if you have path parameter
+// DELETE https://api.example.com/v1/user
+$id = 1;
+$response = ApiCLient::v1()->user()->delete($id);
+```
 
 ## Install
 
@@ -27,7 +57,7 @@ composer require miniyus/restful-api-client
 2. Laravel artisan command
 
 ```shell
-php artisan vendor:publish # select ApiClientServiceProvider
+php artisan vendor:publish --provider="Miniyus\RestfulApiClient\ApiClientServiceProvider"
 ```
 
 ## Usage
@@ -100,6 +130,7 @@ class MainClient extends ApiClient{
 ```
 
 3. extends AbstractEndPoint(end point 클래스)
+
 ```php
 <?php
 
@@ -120,6 +151,7 @@ class V1 extends AbstractEndPoint
 ```
 
 4. extends AbstarctSubClient(sub client 클래스)
+
 ```php
 <?php
 
@@ -357,6 +389,7 @@ $resourceUser->show($id);
 ```
 
 > SubClient 구조 및 기능 설명
+
 ```php
     /**
      * restfulAPI url 구조에 따라 구현해둔 클래스들의 폴더 구조 형태로 작성되는 최종 url
@@ -390,16 +423,17 @@ $resourceUser->show($id);
      */
     protected ?string $server;
 ```
+
 - get()
-  - 일반적인 get요청, 파라미터는 배열로 요청한다.
+    - 일반적인 get요청, 파라미터는 배열로 요청한다.
 - post()
-  - 일반적인 post요청,파라미터는 배열로 요청한다.
+    - 일반적인 post요청,파라미터는 배열로 요청한다.
 - put()
-  - 일반적인 put 요청, 파라미터는 배열로 요청한다.
-  - put 요청의 경우 url경로에 id 값(path parameter)을 넣어 보낼 수 있기 때문에, 첫 번째 파라미터가 배열이 아니면, 첫 번째 파라미터는 요청 맨 뒤에 추가된다.
-    - put(1,['a'=>1,'b'=>2]) > put v1/user/1, request-body: {"a":1,"b":2}
+    - 일반적인 put 요청, 파라미터는 배열로 요청한다.
+    - put 요청의 경우 url경로에 id 값(path parameter)을 넣어 보낼 수 있기 때문에, 첫 번째 파라미터가 배열이 아니면, 첫 번째 파라미터는 요청 맨 뒤에 추가된다.
+        - put(1,['a'=>1,'b'=>2]) > put v1/user/1, request-body: {"a":1,"b":2}
 - delete()
-  - 일반적인 delete 요청, 파라미터는 배열로 요청한다.
-  - delete 요청도 마찬가지로 url 경로에 id 값이 포함될 수 있어, put과 같이 처리된다.
+    - 일반적인 delete 요청, 파라미터는 배열로 요청한다.
+    - delete 요청도 마찬가지로 url 경로에 id 값이 포함될 수 있어, put과 같이 처리된다.
 - show()
-  - show($id)는 조회용으로, get v1/user/1 과 같은 기능을 수행한다.
+    - show($id)는 조회용으로, get v1/user/1 과 같은 기능을 수행한다.

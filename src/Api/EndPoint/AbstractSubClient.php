@@ -149,9 +149,8 @@ abstract class AbstractSubClient extends Client implements SubClient
      * @return array|string|null
      * @throws FileNotFoundException
      */
-    public function delete($input)
+    public function delete($input = [])
     {
-        $data = [];
         $data = $this->parsePathParameter($input);
         return $this->response(
             Http::withToken($this->getToken())->delete($this->url, $data)
