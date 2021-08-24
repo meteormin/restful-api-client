@@ -50,9 +50,10 @@ abstract class ApiClient extends Client
 
     /**
      * @param $name
+     * @param $arguments
      * @return EndPoint|null
      */
-    public static function __callStatic($name)
+    public static function __callStatic($name, $arguments)
     {
         $static = static::newInstance();
 
@@ -61,9 +62,10 @@ abstract class ApiClient extends Client
 
     /**
      * @param $name
+     * @param $arguments
      * @return EndPoint|null
      */
-    public function __call($name)
+    public function __call($name, $arguments)
     {
         return $this->makeEndPoint($name);
     }
