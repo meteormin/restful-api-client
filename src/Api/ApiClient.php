@@ -5,7 +5,6 @@ namespace Miniyus\RestfulApiClient\Api;
 
 
 use Miniyus\RestfulApiClient\Api\Contracts\EndPoint;
-use Miniyus\RestfulApiClient\Response\ErrorResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
 
@@ -68,21 +67,16 @@ abstract class ApiClient extends Client
      */
     public function __call($name, $arguments)
     {
-        $classPath = $this->getEndPointClass($name);
-        if (is_null($classPath)) {
-            return null;
-        }
-
-        return $this->makeEndPoint($classPath);
+        return $this->makeEndPoint($name);
     }
 
     /**
      * @param string|null $host
-     * @return static
+     * @return ApiClient|Client
      */
     public static function newInstance(string $host = null): ApiClient
     {
-        return new static($host);
+        return parent::newInstance($host);
     }
 
     /**
@@ -112,11 +106,16 @@ abstract class ApiClient extends Client
     }
 
     /**
-     * @param string $class
+     * @param string $name
      * @return EndPoint|null
      */
-    protected function makeEndPoint(string $class): ?EndPoint
+    protected function makeEndPoint(string $name): ?EndPoint
     {
+        $class = $this->getEndPointClass($name);
+        if (is_null($class)) {
+            return null;
+        }
+
         if (class_exists($class)) {
             $object = new $class($this->host, $this->type, $this->server);
             if ($object instanceof EndPoint) {
@@ -125,13 +124,5 @@ abstract class ApiClient extends Client
         }
 
         return null;
-    }
-
-    /**
-     * @return void
-     */
-    public function throw()
-    {
-        ErrorResponse::throw($this->response->json() ?? $this->response->body());
     }
 }
