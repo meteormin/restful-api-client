@@ -38,7 +38,11 @@ trait Api
     {
         $method = Str::lower($name);
 
-        return $host . "/{$this->endPoint()}/{$method}";
+        if (empty($this->endPoint())) {
+            return $host . "/$method";
+        }
+
+        return $host . "/{$this->endPoint()}/$method";
     }
 
     /**
@@ -104,7 +108,6 @@ trait Api
 
         return $token;
     }
-
 
     /**
      * @return string

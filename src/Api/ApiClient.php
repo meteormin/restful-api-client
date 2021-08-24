@@ -102,7 +102,7 @@ abstract class ApiClient extends Client
      */
     public function endPoint(): string
     {
-        return 'oauth';
+        return '';
     }
 
     /**
