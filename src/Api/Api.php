@@ -86,7 +86,9 @@ trait Api
         $token = null;
         switch ($type) {
             case 'storage':
-                $token = Storage::disk('local')->get(config("api_server.$this->server.token_storage.$type.name"));
+                if (Storage::disk('local')->exists(config("api_server.$this->server.token_storage.$type.name"))) {
+                    $token = Storage::disk('local')->get(config("api_server.$this->server.token_storage.$type.name"));
+                }
                 break;
             case 'session':
                 $token = session(config("api_server.$this->server.token_storage.$type.name"));
