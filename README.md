@@ -114,7 +114,7 @@ use \Miniyus\RestfulApiClient\Api\ApiClient;
 
 $client = ApiClient::v1();
 $client->config() // returned ConfigParser
-$client->config()->api // == config('api_server.{server}.end_point.api')
+$client->config()->api() // == config('api_server.{server}.end_point.api')
 $client->config('end_point') // == config('api_server.{server}.end_point')
 $client->config('host') // == config('api_server.{server}.host')
 ```
