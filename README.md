@@ -14,36 +14,38 @@
     <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow" />
   </a>
 
-laravel용 restful API개발 도구입니다. restful API의 url구조를 클래스로 구현하기 쉽게 Abstract 클래스들을 제공합니다.
+Laravel용 restful API개발 도구입니다. restful API의 url구조를 클래스로 구현하기 쉽게 Abstract 클래스들을 제공합니다.
 
 ## Preview
 
 ```php
 <?php
+use \Miniyus\RestfulApiClient\Api\ApiClient;
+
 // GET https://api.exmaple.com/v1/user
 $response = ApiClient::v1()->user()->get();
 
 // POST https://api.example.com/v1/user
 $request = ['something'=>''];
-$response = ApiCLient::v1()->user()->post($request);
+$response = ApiClient::v1()->user()->post($request);
 
 // PUT https://api.example.com/v1/user
 $request = ['something'=>''];
-$response = ApiCLient::v1()->user()->put($request);
+$response = ApiClient::v1()->user()->put($request);
 
 // if you have path parameter
 // PUT https://api.example.com/v1/user/1 
 $id = 1;
 $request = ['something'=>''];
-$response = ApiCLient::v1()->user()->put($id, $request);
+$response = ApiClient::v1()->user()->put($id, $request);
 
 // DELETE https://api.example.com/v1/user
-$response = ApiCLient::v1()->user()->delete();
+$response = ApiClient::v1()->user()->delete();
 
 // if you have path parameter
 // DELETE https://api.example.com/v1/user
 $id = 1;
-$response = ApiCLient::v1()->user()->delete($id);
+$response = ApiClient::v1()->user()->delete($id);
 ```
 
 ## Install
@@ -81,7 +83,7 @@ return [
         ],
         'end_point' => [
             /** end point ex) https://api.example.com/v1 => v1 */
-            'v1',
+            'v1'=>['v1 end point에서 사용할 기타 설정 정의'],
         ]
     ],
     // 다른 url의 api가 필요한 경우 추가할 수 있습니다.
@@ -102,6 +104,19 @@ return [
     ]
 ];
 
+```
+
+> 클래스에서 config 접근
+>> config() 메서드는 Api Trait에 구현되어 있습니다.
+
+```php
+use \Miniyus\RestfulApiClient\Api\ApiClient;
+
+$client = ApiClient::v1();
+$client->config() // returned ConfigParser
+$client->config()->api // == config('api_server.{server}.end_point.api')
+$client->config('end_point') // == config('api_server.{server}.end_point')
+$client->config('host') // == config('api_server.{server}.host')
 ```
 
 2. extends ApiClient(루트 클래스)
@@ -138,7 +153,14 @@ use Miniyus\RestfulApiClient\Api\EndPoint\AbstractEndPoint;
 
 /**
  * Class V1
- * 클래스 명과 end point의 명이 일치해야 합니다.
+ * 클래스명은 ApiClient::{className}() 형태로 상위 객체에서 호출 시 사용되며,
+ * endPoint() 메서드의 경우는 실제 url에 포함되어 요청을 보냅니다.
+ * ex) 
+ * className = Api
+ * endPoint = v1
+ * 
+ * 호출: ApiClient::api()
+ * 생성되는 api 요청 url: {host}/v1
  */
 class V1 extends AbstractEndPoint
 {
@@ -150,7 +172,7 @@ class V1 extends AbstractEndPoint
 
 ```
 
-4. extends AbstarctSubClient(sub client 클래스)
+4. extends AbstractSubClient(sub client 클래스)
 
 ```php
 <?php
