@@ -39,7 +39,7 @@ class ConfigParser
 
     /**
      * call end point
-     * $this->api() == config('api_server.api')
+     * $this->api() == config('api_server.{server}.end_point.api')
      */
     public function __call($name, $argument)
     {
