@@ -51,8 +51,10 @@ abstract class AbstractSubClient extends Client implements SubClient
     /**
      * AbstractEndPoint constructor.
      * @param string|null $host
+     * @param string $type
+     * @param array|string $server
      */
-    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', $server = 'default')
     {
         parent::__construct($host);
         $this->initialize($host, $type, $server);
