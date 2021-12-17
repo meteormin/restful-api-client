@@ -7,15 +7,49 @@ namespace Miniyus\RestfulApiClient\Api;
 use ArrayAccess;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * @mixn Client
+ */
 trait Api
 {
     /**
      * @var ConfigParser
      */
     protected ConfigParser $config;
+
+    /**
+     * @param string|null $host
+     * @param string $type
+     * @param array|string $server
+     */
+    protected function initialize(string $host = null, string $type = 'storage', $server = 'default')
+    {
+        if (is_string($server)) {
+            if (is_null($host)) {
+                /** @var string|null $host */
+                $host = config('api_server.' . $server . '.host', null);
+            }
+
+            $config = ConfigParser::newInstance(config('api_server.' . $server));
+        } else if (is_array($server)) {
+            if (is_null($host)) {
+                $host = $server['host'];
+            }
+            $config = ConfigParser::newInstance($server);
+            $server = null;
+        } else {
+            throw new \InvalidArgumentException('must be server parameter is string|array');
+        }
+
+        $this->host = $host;
+        $this->type = $type;
+        $this->server = $server;
+        $this->config = $config;
+    }
 
     /**
      * @param string|null $name
@@ -116,4 +150,87 @@ trait Api
      */
     abstract public function endPoint(): string;
 
+    /**
+     * @param string|int|array $input
+     * @return array
+     */
+    protected function parsePathParameter($input): array
+    {
+        $data = [];
+        if (is_array($input)) {
+            $data = $input;
+        } else {
+            $this->url .= "/$input";
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array|string|null $input
+     * @return array|string|null
+     * @throws FileNotFoundException
+     */
+    public function get($input = null)
+    {
+        return $this->response(
+            Http::withToken($this->getToken())->get($this->url, $input)
+        );
+    }
+
+    /**
+     * @param array $input
+     * @return array|string|null
+     * @throws FileNotFoundException
+     */
+    public function post(array $input = [])
+    {
+        return $this->response(
+            Http::withToken($this->getToken())->post($this->url, $input)
+        );
+    }
+
+    /**
+     * @param array|string|int $input
+     * @param array $data
+     * @return array|string|null
+     * @throws FileNotFoundException
+     */
+    public function put($input = [], array $data = [])
+    {
+        $data = $this->parsePathParameter($input);
+
+        return $this->response(
+            Http::withToken($this->getToken())->put($this->url, $data)
+        );
+    }
+
+    /**
+     * @param string|int|array $input
+     * @return array|string|null
+     * @throws FileNotFoundException
+     */
+    public function delete($input = [])
+    {
+        $data = $this->parsePathParameter($input);
+        return $this->response(
+            Http::withToken($this->getToken())->delete($this->url, $data)
+        );
+    }
+
+    /**
+     * show resource, id parameter is path parameter
+     * @param string|int $id
+     * @return null
+     * @throws FileNotFoundException
+     */
+    public function show($id, array $params = null)
+    {
+        if (empty($id)) {
+            throw new \InvalidArgumentException('show(): $id 파라미터는 필수 입니다.');
+        }
+
+        $this->url .= "/{$id}";
+        return $this->get($params);
+    }
 }

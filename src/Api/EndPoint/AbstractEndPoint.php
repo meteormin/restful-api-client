@@ -18,9 +18,9 @@ abstract class AbstractEndPoint extends Client implements EndPoint
     use Api;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $type;
+    protected string $type;
 
     /**
      * @var string|null
@@ -30,18 +30,13 @@ abstract class AbstractEndPoint extends Client implements EndPoint
     /**
      * AbstractEndPoint constructor.
      * @param string|null $host
+     * @param string $type
+     * @param string|array $server
      */
-    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', $server = 'default')
     {
-        if (is_null($host)) {
-            $host = config("api_server.$server");
-        }
-
         parent::__construct($host);
-
-        $this->type = $type;
-        $this->server = $server;
-        $this->config = ConfigParser::newInstance(config('api_server.' . $server));
+        $this->initialize($host, $type, $server);
     }
 
     /**

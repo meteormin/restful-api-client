@@ -17,15 +17,20 @@ abstract class ApiClient extends Client
     use Api;
 
     /**
+     * @var string|null
+     */
+    protected ?string $host;
+
+    /**
      * response
      * @var Response|null
      */
     protected ?Response $response;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $type;
+    protected string $type;
 
     /**
      * @var string|null
@@ -33,19 +38,14 @@ abstract class ApiClient extends Client
     protected ?string $server;
 
     /**
-     * ApiClient constructor.
+     * @param string|null $host
+     * @param string $type
+     * @param array|string $server
      */
-    public function __construct(string $host = null, string $type = 'storage', string $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', $server = 'default')
     {
-        if (is_null($host)) {
-            $host = config('api_server.' . $server . '.host');
-        }
-
         parent::__construct($host);
-
-        $this->type = $type;
-        $this->server = $server;
-        $this->config = ConfigParser::newInstance(config('api_server.' . $server));
+        $this->initialize($host, $type, $server);
     }
 
     /**
