@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^7.4|^8.0",
     "illuminate/contracts": "^v7.30.4|^v8.40.0",
     "illuminate/session": "^v7.30.4|^v8.40.0",
     "illuminate/console": "^v7.30.4|^v8.40.0",
