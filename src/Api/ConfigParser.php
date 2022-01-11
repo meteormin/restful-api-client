@@ -38,17 +38,17 @@ class ConfigParser
     }
 
     /**
-     * call end point
-     * $this->api() == config('api_server.{server}.end_point.api')
+     * $this->end_point() == config('api_server.{server}.end_point')
+     * $this->end_point('api') == config('api_server.{server}.end_point.api')
      */
     public function __call($name, $argument)
     {
         $arg = $argument[0] ?? null;
         if (is_null($arg)) {
-            return $this->get("end_point.{$name}");
+            return $this->get("{$name}");
         }
 
-        return $this->get("end_point.{$name}.{$arg}");
+        return $this->get("{$name}.{$arg}");
     }
 
     /**
@@ -70,7 +70,7 @@ class ConfigParser
      */
     public function all()
     {
-        return $this->get("end_point");
+        return $this->get();
     }
 
 }

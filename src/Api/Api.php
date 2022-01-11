@@ -87,19 +87,20 @@ trait Api
     {
         switch ($type) {
             case 'storage':
-                Storage::disk('local')->put(config("api_server.$this->server.token_storage.$type.name"), $token);
+
+                Storage::disk('local')->put($this->config("token_storage.$type.name"), $token);
                 break;
             case 'session':
-                session([config("api_server.$this->server.token_storage.$type.name") => $token]);
+                session([$this->config("token_storage.$type.name") => $token]);
                 break;
             case 'model':
-                $class = config("api_server.$this->server.token_storage.$type.name");
+                $class = $this->config("token_storage.$type.name");
                 $model = new $class;
                 $model->setAttribute('access_token', $token);
                 $model->save();
                 break;
             case 'cookie':
-                cookie(config("api_server.$this->server.token_storage.$type.name"), $token);
+                cookie($this->config("token_storage.$type.name"), $token);
                 break;
             default:
                 if (!is_null($this->type)) {
@@ -120,20 +121,20 @@ trait Api
         $token = null;
         switch ($type) {
             case 'storage':
-                if (Storage::disk('local')->exists(config("api_server.$this->server.token_storage.$type.name"))) {
-                    $token = Storage::disk('local')->get(config("api_server.$this->server.token_storage.$type.name"));
+                if (Storage::disk('local')->exists($this->config("token_storage.$type.name"))) {
+                    $token = Storage::disk('local')->get($this->config("token_storage.$type.name"));
                 }
                 break;
             case 'session':
-                $token = session(config("api_server.$this->server.token_storage.$type.name"));
+                $token = session($this->config("token_storage.$type.name"));
                 break;
             case 'model':
-                $class = config("api_server.$this->server.token_storage.$type.name");
+                $class = $this->config("token_storage.$type.name");
                 $model = new $class;
                 $token = $model->orderByDesc('created_at')->first();
                 break;
             case 'cookie':
-                $token = Cookie::get(config("api_server.$this->server.token_storage.$type.name"));
+                $token = Cookie::get($this->config("token_storage.$type.name"));
                 break;
             default:
                 if (!is_null($this->type)) {
