@@ -117,7 +117,7 @@ abstract class ApiClient extends Client
         }
 
         if (class_exists($class)) {
-            $object = new $class($this->host, $this->type, $this->server);
+            $object = new $class($this->host, $this->type, $this->server ?? $this->config->all());
             if ($object instanceof EndPoint) {
                 return $object;
             }

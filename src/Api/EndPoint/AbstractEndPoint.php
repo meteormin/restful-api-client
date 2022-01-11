@@ -63,7 +63,7 @@ abstract class AbstractEndPoint extends Client implements EndPoint
         $class = $this->config('module_namespace') . "\\" . Str::studly($this->endPoint()) . "\\Resource\\" . Str::studly($name);
 
         /** @var AbstractSubClient $client */
-        $client = new $class($this->host, $this->type, $this->server);
+        $client = new $class($this->host, $this->type, $this->server ?? $this->config->all());
 
         $namespace = $client->getNameSpace();
         $namePath = empty($namespace) ? $name : $namespace . '/' . $name;
