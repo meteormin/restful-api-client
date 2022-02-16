@@ -17,6 +17,8 @@ abstract class AbstractEndPoint extends Client implements EndPoint
 {
     use Api;
 
+    public string $url;
+
     /**
      * @var string
      */
