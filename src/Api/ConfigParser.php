@@ -10,7 +10,6 @@ use ArrayAccess;
 /**
  * Class ConfigParser
  * @package App\Libraries\V1
- * @method array|ArrayAccess oauth(string $argument = null)
  */
 class ConfigParser
 {

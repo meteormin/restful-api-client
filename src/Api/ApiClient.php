@@ -37,6 +37,8 @@ abstract class ApiClient extends Client
      */
     protected ?string $server;
 
+    protected string $configName = 'api_server';
+
     /**
      * @param string|null $host
      * @param string $type

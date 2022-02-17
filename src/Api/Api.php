@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * @mixn Client
+ * @mixn ApiClient|Client
  */
 trait Api
 {
@@ -31,10 +31,10 @@ trait Api
         if (is_string($server)) {
             if (is_null($host)) {
                 /** @var string|null $host */
-                $host = config('api_server.' . $server . '.host', null);
+                $host = config($this->configName . $server . '.host', null);
             }
 
-            $config = ConfigParser::newInstance(config('api_server.' . $server));
+            $config = ConfigParser::newInstance(config($this->configName . $server));
         } else if (is_array($server)) {
             if (is_null($host)) {
                 $host = $server['host'];
@@ -137,9 +137,7 @@ trait Api
                 $token = Cookie::get($this->config("token_storage.$type.name"));
                 break;
             default:
-                if (!is_null($this->type)) {
-                    $token = $this->getToken($this->type);
-                }
+                $token = $this->getToken($this->type);
                 break;
         }
 
