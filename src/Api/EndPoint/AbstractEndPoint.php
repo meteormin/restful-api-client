@@ -30,12 +30,17 @@ abstract class AbstractEndPoint extends Client implements EndPoint
     protected ?string $server;
 
     /**
+     * @var array
+     */
+    protected array $subClients = [];
+
+    /**
      * AbstractEndPoint constructor.
      * @param string|null $host
      * @param string $type
-     * @param string|array $server
+     * @param array|string $server
      */
-    public function __construct(string $host = null, string $type = 'storage', $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', array|string $server = 'default')
     {
         parent::__construct($host);
         $this->initialize($host, $type, $server);
@@ -52,17 +57,16 @@ abstract class AbstractEndPoint extends Client implements EndPoint
     }
 
     /**
-     * @return string
-     */
-    abstract public function endPoint(): string;
-
-    /**
      * @param string $name
      * @return AbstractSubClient
      */
     protected function makeClient(string $name): AbstractSubClient
     {
-        $class = $this->config('module_namespace') . "\\" . Str::studly($this->endPoint()) . "\\Resource\\" . Str::studly($name);
+        if (count($this->subClients) == 0) {
+            $class = $this->config('module_namespace') . "\\" . Str::studly($this->endPoint()) . "\\Resource\\" . Str::studly($name);
+        } else {
+            $class = $this->subClients[$name];
+        }
 
         /** @var AbstractSubClient $client */
         $client = new $class($this->host, $this->type, $this->server ?? $this->config->all());
@@ -75,4 +79,10 @@ abstract class AbstractEndPoint extends Client implements EndPoint
 
         return $client;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function endPoint(): string;
+
 }

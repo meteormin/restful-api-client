@@ -10,13 +10,13 @@
     }
   ],
   "require": {
-    "php": "^7.4|^8.0",
-    "illuminate/contracts": "^v7.30|^v8.40",
-    "illuminate/session": "^v7.30|^v8.40",
-    "illuminate/console": "^v7.30|^v8.40",
-    "illuminate/support": "^v7.30|^v8.40",
-    "illuminate/http": "^v7.30.4|^v8.40",
-    "illuminate/routing": "^v7.30.4|^v8.40",
+    "php": "^8.0.2|^8.1",
+    "illuminate/contracts": "^v8.40|^v9.0",
+    "illuminate/session": "^v8.40|^v9.0",
+    "illuminate/console": "^v8.40|^v9.0",
+    "illuminate/support": "^v8.40|^v9.0",
+    "illuminate/http": "^v8.40|^v9.0",
+    "illuminate/routing": "^v8.40|^v9.0",
     "ext-json": "*"
   },
   "autoload": {

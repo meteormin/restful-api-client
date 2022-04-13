@@ -40,11 +40,16 @@ abstract class ApiClient extends Client
     protected string $configName = 'api_server';
 
     /**
+     * @var array<string,string>
+     */
+    protected array $modules = [];
+
+    /**
      * @param string|null $host
      * @param string $type
      * @param array|string $server
      */
-    public function __construct(string $host = null, string $type = 'storage', $server = 'default')
+    public function __construct(string $host = null, string $type = 'storage', array|string $server = 'default')
     {
         parent::__construct($host);
         $this->initialize($host, $type, $server);
@@ -87,24 +92,23 @@ abstract class ApiClient extends Client
      */
     protected function getEndPointClass(string $name): ?string
     {
-        $apis = $this->config('end_point');
-        $classPath = null;
-        foreach (array_keys($apis) as $key) {
-            if ($name == $key) {
-                $className = Str::studly($key);
-                $classPath = $this->config('module_namespace') . "\\{$className}\\" . $className;
-            }
+        if (count($this->modules) == 0) {
+            $apis = $this->config('end_point');
+        } else {
+            $apis = $this->modules[$name];
         }
 
-        return $classPath;
-    }
+        $className = null;
 
-    /**
-     * @return string
-     */
-    public function endPoint(): string
-    {
-        return '';
+        $classNames = array_filter($apis, function ($value, $key) use ($name) {
+            return $name == $key;
+        });
+
+        if (is_string($classNames[0])) {
+            $className = Str::studly($classNames[0]);
+        }
+
+        return $className;
     }
 
     /**
@@ -130,4 +134,10 @@ abstract class ApiClient extends Client
 
         return null;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function endPoint(): string;
+
 }

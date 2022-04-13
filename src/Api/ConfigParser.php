@@ -55,7 +55,7 @@ class ConfigParser
      * @param mixed|null $default
      * @return array|ArrayAccess|mixed
      */
-    public function get(string $key = null, $default = null)
+    public function get(string $key = null, mixed $default = null): mixed
     {
         if (is_null($key)) {
             return $this->config;
@@ -67,7 +67,7 @@ class ConfigParser
     /**
      * @return array|ArrayAccess|mixed|null
      */
-    public function all()
+    public function all(): mixed
     {
         return $this->get();
     }

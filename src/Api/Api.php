@@ -26,7 +26,7 @@ trait Api
      * @param string $type
      * @param array|string $server
      */
-    protected function initialize(string $host = null, string $type = 'storage', $server = 'default')
+    protected function initialize(string $host = null, string $type = 'storage', array|string $server = 'default')
     {
         if (is_string($server)) {
             if (is_null($host)) {
@@ -55,7 +55,7 @@ trait Api
      * @param string|null $name
      * @return ConfigParser|array|ArrayAccess|mixed|null
      */
-    public function config(string $name = null)
+    public function config(string $name = null): mixed
     {
         if (is_null($name)) {
             return $this->config;
@@ -80,8 +80,9 @@ trait Api
     }
 
     /**
+     * @param string $token
      * @param string|null $type
-     * @return $this
+     * @return Api|ApiClient|EndPoint\AbstractEndPoint|EndPoint\AbstractSubClient
      */
     public function setToken(string $token, string $type = null): self
     {
@@ -150,10 +151,10 @@ trait Api
     abstract public function endPoint(): string;
 
     /**
-     * @param string|int|array $input
+     * @param array|int|string $input
      * @return array
      */
-    protected function parsePathParameter($input): array
+    protected function parsePathParameter(array|int|string $input): array
     {
         $data = [];
         if (is_array($input)) {
@@ -170,7 +171,7 @@ trait Api
      * @return array|string|null
      * @throws FileNotFoundException
      */
-    public function get($input = null)
+    public function get(array|string $input = null): array|string|null
     {
         return $this->response(
             Http::withToken($this->getToken())->get($this->url, $input)
@@ -182,7 +183,7 @@ trait Api
      * @return array|string|null
      * @throws FileNotFoundException
      */
-    public function post(array $input = [])
+    public function post(array $input = []): array|string|null
     {
         return $this->response(
             Http::withToken($this->getToken())->post($this->url, $input)
@@ -190,12 +191,11 @@ trait Api
     }
 
     /**
-     * @param array|string|int $input
-     * @param array $data
+     * @param int|array|string $input
      * @return array|string|null
      * @throws FileNotFoundException
      */
-    public function put($input = [], array $data = [])
+    public function put(int|array|string $input = []): array|string|null
     {
         $data = $this->parsePathParameter($input);
 
@@ -205,11 +205,11 @@ trait Api
     }
 
     /**
-     * @param string|int|array $input
+     * @param array|int|string $input
      * @return array|string|null
      * @throws FileNotFoundException
      */
-    public function delete($input = [])
+    public function delete(array|int|string $input = []): array|string|null
     {
         $data = $this->parsePathParameter($input);
         return $this->response(
@@ -219,11 +219,12 @@ trait Api
 
     /**
      * show resource, id parameter is path parameter
-     * @param string|int $id
+     * @param int|string $id
+     * @param array|null $params
      * @return null
      * @throws FileNotFoundException
      */
-    public function show($id, array $params = null)
+    public function show(int|string $id, array $params = null)
     {
         if (empty($id)) {
             throw new \InvalidArgumentException('show(): $id 파라미터는 필수 입니다.');

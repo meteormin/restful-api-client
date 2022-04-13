@@ -22,7 +22,7 @@ abstract class Client
     /**
      * @var array|string|null
      */
-    protected $error;
+    protected string|array|null $error;
 
     /**
      * 생성자
@@ -54,7 +54,7 @@ abstract class Client
      *
      * @return array|mixed|string|null
      */
-    protected function response(Response $response)
+    protected function response(Response $response): mixed
     {
         $this->response = $response;
 
@@ -82,14 +82,14 @@ abstract class Client
     /**
      * @return array|string|null
      */
-    public function getError()
+    public function getError(): array|string|null
     {
         return $this->error;
     }
 
     /**
      * Get the value of host
-     * @return string
+     * @return string|null
      */
     public function getHost(): ?string
     {
